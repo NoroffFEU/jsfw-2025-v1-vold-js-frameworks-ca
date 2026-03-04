@@ -2,24 +2,38 @@
 
 import { useEffect, useState } from "react";
 import { getProducts } from "@/services/api";
-import { Product } from "@/types/product";
+import type { Product } from "@/types/product";
 
 export default function Home() {
 	const [products, setProducts] = useState<Product[]>([]);
+	const [loading, setLoading] = useState<boolean>(true);
+	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
-		async function fetchProducts() {
-			const data = await getProducts();
-			setProducts(data);
+		async function load() {
+			try {
+				setLoading(true);
+				setError(null);
+
+				const data = await getProducts();
+				setProducts(data);
+			} catch (err) {
+				setError(err instanceof Error ? err.message : "Unknown error");
+			} finally {
+				setLoading(false);
+			}
 		}
 
-		fetchProducts();
+		load();
 	}, []);
+
+	if (loading) return <main className="p-6">Loading…</main>;
+	if (error) return <main className="p-6">Error: {error}</main>;
 
 	return (
 		<main className="p-6">
 			<h1 className="text-2xl font-bold mb-4">Products</h1>
-			<pre>{JSON.stringify(products, null, 1)}</pre>
+			<pre className="text-sm">{JSON.stringify(products, null, 2)}</pre>
 		</main>
 	);
 }

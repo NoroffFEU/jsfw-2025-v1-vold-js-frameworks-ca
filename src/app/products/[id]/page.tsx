@@ -1,4 +1,5 @@
 import { getProductById } from "@/services/api";
+import AddToCartButton from "@/components/AddToCartButton";
 
 type PageProps = {
 	params: Promise<{ id: string }>;
@@ -34,6 +35,8 @@ export default async function ProductPage({ params }: PageProps) {
 			</p>
 
 			<p>Rating: {product.rating}</p>
+
+			<AddToCartButton product={product} />
 		</main>
 	);
 }

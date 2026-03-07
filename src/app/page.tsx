@@ -4,11 +4,14 @@ import { useEffect, useState } from "react";
 import { getProducts } from "@/services/api";
 import type { Product } from "@/types/product";
 import ProductCard from "@/components/ProductCard";
+import { useCart } from "@/context/CartContext";
+import Link from "next/link";
 
 export default function Home() {
 	const [products, setProducts] = useState<Product[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
+	const { cartCount } = useCart();
 
 	useEffect(() => {
 		async function load() {
@@ -34,6 +37,12 @@ export default function Home() {
 	return (
 		<main className="p-6">
 			<h1 className="text-2xl font-bold mb-4">Products</h1>
+
+			<p className="mb-4">Cart items: {cartCount}</p>
+
+			<Link href="/cart" className="underline">
+				Go to Cart
+			</Link>
 
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 				{products.map((product) => (

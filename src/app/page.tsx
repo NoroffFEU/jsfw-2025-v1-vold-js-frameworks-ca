@@ -12,6 +12,8 @@ export default function Home() {
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 	const { cartCount } = useCart();
+	const [search, setSearch] = useState("");
+	const [sortBy, setSortBy] = useState("default");
 
 	useEffect(() => {
 		async function load() {
@@ -34,6 +36,26 @@ export default function Home() {
 	if (loading) return <main className="p-6">Loading…</main>;
 	if (error) return <main className="p-6">Error: {error}</main>;
 
+	const filteredProducts = products
+		.filter((product) =>
+			product.title.toLowerCase().includes(search.toLowerCase()),
+		)
+		.sort((a, b) => {
+			if (sortBy === "name") {
+				return a.title.localeCompare(b.title);
+			}
+
+			if (sortBy === "price-low") {
+				return (a.discountedPrice ?? a.price) - (b.discountedPrice ?? b.price);
+			}
+
+			if (sortBy === "price-high") {
+				return (b.discountedPrice ?? b.price) - (a.discountedPrice ?? a.price);
+			}
+
+			return 0;
+		});
+
 	return (
 		<main className="p-6">
 			<h1 className="text-2xl font-bold mb-4">Products</h1>
@@ -44,8 +66,33 @@ export default function Home() {
 				Go to Cart
 			</Link>
 
+			<div className="mb-6 flex flex-col gap-4 md:flex-row">
+				<input
+					type="text"
+					placeholder="Search products..."
+					value={search}
+					onChange={(e) => setSearch(e.target.value)}
+					className="border p-2 rounded"
+				/>
+
+				<select
+					value={sortBy}
+					onChange={(e) => setSortBy(e.target.value)}
+					className="border p-2 rounded"
+				>
+					<option value="default">Sort by</option>
+					<option value="name">Name A-Z</option>
+					<option value="price-low">Price low to high</option>
+					<option value="price-high">Price high to low</option>
+				</select>
+			</div>
+
+			{filteredProducts.length === 0 && (
+				<p className="mb-4">No products found.</p>
+			)}
+
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-				{products.map((product) => (
+				{filteredProducts.map((product) => (
 					<ProductCard key={product.id} product={product} />
 				))}
 			</div>

@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useMemo, useState } from "react";
+import {
+	createContext,
+	useCallback,
+	useContext,
+	useMemo,
+	useState,
+} from "react";
 import type { Product } from "@/types/product";
 import type { CartItem } from "@/types/cart";
 
@@ -38,9 +44,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 		setCart((currentCart) => currentCart.filter((item) => item.id !== id));
 	}
 
-	function clearCart() {
+	const clearCart = useCallback(() => {
 		setCart([]);
-	}
+	}, []);
 
 	const cartCount = useMemo(
 		() => cart.reduce((total, item) => total + item.quantity, 0),

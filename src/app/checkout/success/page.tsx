@@ -3,12 +3,14 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import toast from "react-hot-toast";
 
 export default function CheckoutSuccessPage() {
 	const { clearCart } = useCart();
 
 	useEffect(() => {
 		clearCart();
+		toast.success("Order successful");
 	}, [clearCart]);
 
 	return (

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 type FormData = {
 	fullName: string;
@@ -69,6 +70,8 @@ export default function ContactPage() {
 
 		if (Object.keys(validationErrors).length === 0) {
 			setSuccessMessage("Form submitted successfully.");
+			toast.success("Form submitted successfully");
+
 			setFormData({
 				fullName: "",
 				subject: "",
@@ -77,6 +80,7 @@ export default function ContactPage() {
 			});
 		} else {
 			setSuccessMessage("");
+			toast.error("Please fix the form errors");
 		}
 	}
 

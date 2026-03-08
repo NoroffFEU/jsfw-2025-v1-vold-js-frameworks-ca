@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import toast from "react-hot-toast";
 
 export default function CartPage() {
 	const { cart, removeFromCart, totalPrice } = useCart();
@@ -22,7 +23,10 @@ export default function CartPage() {
 								<p>Price: ${item.discountedPrice ?? item.price}</p>
 
 								<button
-									onClick={() => removeFromCart(item.id)}
+									onClick={() => {
+										removeFromCart(item.id);
+										toast.success("Item removed");
+									}}
 									className="mt-2 border px-3 py-1 rounded"
 								>
 									Remove

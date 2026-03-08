@@ -8,7 +8,17 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
 	return (
 		<Link href={`/products/${product.id}`}>
-			<div className="border p-4 rounded">
+			<div className="relative border p-4 rounded">
+				{product.discountedPrice && (
+					<span className="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded">
+						-
+						{Math.round(
+							((product.price - product.discountedPrice) / product.price) * 100,
+						)}
+						%
+					</span>
+				)}
+
 				<img
 					src={product.image.url}
 					alt={product.image.alt || product.title}

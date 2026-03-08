@@ -8,7 +8,7 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
 	return (
 		<Link href={`/products/${product.id}`}>
-			<div className="relative border p-4 rounded">
+			<div className="relative p-3 h-full flex flex-col">
 				{product.discountedPrice && (
 					<span className="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded">
 						-
@@ -22,7 +22,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 				<img
 					src={product.image.url}
 					alt={product.image.alt || product.title}
-					className="mb-2"
+					className="mb-2 w-full aspect-square object-cover"
 				/>
 
 				<h2 className="font-semibold">{product.title}</h2>

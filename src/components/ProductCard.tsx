@@ -6,31 +6,39 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+	const discountedPrice = product.discountedPrice;
+
+	const hasDiscount =
+		typeof discountedPrice === "number" && discountedPrice < product.price;
+
+	const discountPercentage = hasDiscount
+		? Math.round(((product.price - discountedPrice) / product.price) * 100)
+		: 0;
+
 	return (
-		<Link href={`/products/${product.id}`}>
-			<div className="relative p-3 h-full flex flex-col">
-				{product.discountedPrice && (
-					<span className="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded">
-						-
-						{Math.round(
-							((product.price - product.discountedPrice) / product.price) * 100,
-						)}
-						%
+		<Link
+			href={`/products/${product.id}`}
+			className="block h-full focus:outline-none focus:ring-2 focus:ring-[#404040] focus:ring-offset-2"
+		>
+			<div className="relative flex h-full flex-col p-3">
+				{discountPercentage > 0 && (
+					<span className="absolute left-2 top-2 rounded bg-red-600 px-2 py-1 text-xs text-white">
+						-{discountPercentage}%
 					</span>
 				)}
 
 				<img
 					src={product.image.url}
 					alt={product.image.alt || product.title}
-					className="mb-2 w-full aspect-square object-cover"
+					className="mb-2 aspect-square w-full object-cover"
 				/>
 
 				<h2 className="font-semibold">{product.title}</h2>
 
-				{product.discountedPrice ? (
+				{hasDiscount ? (
 					<p>
-						Price: ${product.discountedPrice}{" "}
-						<span className="line-through text-gray-500">${product.price}</span>
+						Price: ${discountedPrice}{" "}
+						<span className="text-gray-500 line-through">${product.price}</span>
 					</p>
 				) : (
 					<p>Price: ${product.price}</p>
